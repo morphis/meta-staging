@@ -1,0 +1,35 @@
+From 05c0c4c5a568e4f3c54a1da1becbf155e726afbd Mon Sep 17 00:00:00 2001
+From: Simon Busch <morphis@gravedo.de>
+Date: Mon, 2 Jan 2012 12:23:46 +0100
+Subject: [PATCH] meego: work around compilation issue with mlocalwrapper
+ until it's fixed upstream
+
+Signed-off-by: Simon Busch <morphis@gravedo.de>
+---
+ src/meego/plugin.cpp |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
+
+diff --git a/src/meego/plugin.cpp b/src/meego/plugin.cpp
+index 931d69f..3783db0 100644
+--- a/src/meego/plugin.cpp
++++ b/src/meego/plugin.cpp
+@@ -158,10 +158,16 @@ public:
+         QString defaultFontFamilyLight = QLatin1String("Nokia Pure Text Light");
+ 
+         // use arial when language is set to farsi
++        /*
++        Failed to compile with:
++        plugin.cpp: In Elementfunktion »QDeclarativePropertyMap* MeeGoPlugin::uiConstants(MLocaleWrapper*)«:
++        plugin.cpp:161:31: Fehler: »class MLocaleWrapper« hat kein Element namens »language«
++
+         if (locale && locale->language() == QLatin1String("fa")) {
+             defaultFontFamily = QLatin1String("Arial");
+             defaultFontFamilyLight = QLatin1String("Arial");
+         }
++        */
+ 
+         QDeclarativePropertyMap *uiConstantsData = new QDeclarativePropertyMap();
+         uiConstantsData->insert("DefaultMargin", QVariant(16));
+-- 
+1.7.7.3
+

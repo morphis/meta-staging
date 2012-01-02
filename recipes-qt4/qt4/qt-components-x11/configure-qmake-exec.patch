@@ -1,0 +1,83 @@
+From e1097aa474283deba19710de95bd64d912ceef4f Mon Sep 17 00:00:00 2001
+From: Simon Busch <morphis@gravedo.de>
+Date: Sat, 5 Nov 2011 18:05:52 +0100
+Subject: [PATCH] Add support for a qmake binary named otherwise than qmake
+
+Signed-off-by: Simon Busch <morphis@gravedo.de>
+---
+ configure |   29 ++++++++++++++++++++---------
+ 1 files changed, 20 insertions(+), 9 deletions(-)
+
+diff --git a/configure b/configure
+index 2630eea..5d979c0 100755
+--- a/configure
++++ b/configure
+@@ -62,17 +62,10 @@ HAVE_MOBILITY=auto
+ HAVE_SYMBIAN_INTERNAL=no
+ QMAKE_CONFIG=
+ QMAKE_DEBUG=
++QMAKE=qmake
++QMAKE_EXEC=qmake
+ OPT_HELP=no
+ 
+-QMAKE=`which qmake` 2> /dev/null
+-if [ ! -f "$QMAKE" ]; then
+-    QMAKE=$QTDIR/bin/qmake
+-    if [ ! -f $QMAKE ]; then
+-        echo "ERROR: Unable to find qmake. Try QTDIR=/path/to/qt $0."
+-        exit 1
+-    fi
+-fi
+-
+ QMAKE_CACHE=$BUILD_TREE/.qmake.cache
+ [ -f $QMAKE_CACHE ] && rm -f $QMAKE_CACHE
+ 
+@@ -111,6 +104,11 @@ while [ "$#" -gt 0 ]; do
+         VAR=`echo $1 | sed 's,^-\(.*\),\1,'`
+         VAL=yes
+         ;;
++    -qmake-exec)
++        VAR=`echo $1 | sed 's,^-\(.*\),\1,'`
++        shift
++        VAL="$1"
++        ;;
+     -prefix)
+         VAR=`echo $1 | sed 's,^-\(.*\),\1,'`
+         shift
+@@ -138,6 +136,9 @@ while [ "$#" -gt 0 ]; do
+     prefix)
+         INSTALL_PREFIX=$VAL
+         ;;
++    qmake-exec)
++        QMAKE_EXEC=$VAL
++        ;;
+     meego)
+         BUILD_MEEGO_STYLE=yes
+         ;;
+@@ -263,6 +264,15 @@ while [ "$#" -gt 0 ]; do
+     fi
+ done
+ 
++QMAKE=`which $QMAKE_EXEC || echo "unknown"`
++if [ ! -f $QMAKE ]; then
++    QMAKE=$QTDIR/bin/$QMAKE_EXEC
++    if [ ! -f $QMAKE ]; then
++        echo "ERROR: Unable to find qmake. Try QTDIR=/path/to/qt $0."
++        exit 1
++    fi
++fi
++
+ if [ "$OPT_HELP" = "yes" ]; then
+     cat << EOF
+ Usage:  configure [-meego] [-symbian] [-config <config>]
+@@ -344,6 +354,7 @@ echo
+ echo
+ echo "Qt Components build configuration:"
+ echo "Configuration ....................$QMAKE_CONFIG"
++echo "qmake ............................ $QMAKE"
+ echo "MeeGo Style ...................... $BUILD_MEEGO_STYLE"
+ if [ "$BUILD_MEEGO_STYLE" = "yes" ]; then
+     echo "  MeeGo Touch support  ........... $HAVE_MEEGOTOUCH"
+-- 
+1.7.7.3
+
