@@ -29,7 +29,7 @@ QT_COMPONENTS_MKSPECS := "${libdir}/${QT_COMPONENTS_DIR}/mkspecs"
 do_configure() {
   sed -e 's@...QT_INSTALL_IMPORTS.@${QT_COMPONENTS_IMPORTS}@' -i ${S}/qml.pri
   sed -e 's@...QMAKE_MKSPECS.@${QT_COMPONENTS_MKSPECS}@' -i ${S}/qt-components.pro
-  ./configure -prefix /usr -meego -nomake tests -no-mobility -qmake-exec ${STAGING_BINDIR_NATIVE}/qmake2
+  ./configure -prefix ${prefix} -meego -nomake tests -no-mobility -qmake-exec ${STAGING_BINDIR_NATIVE}/qmake2
 }
 
 do_install() {
