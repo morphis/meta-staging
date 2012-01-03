@@ -1,0 +1,28 @@
+From fae6483496e4cbc2b44ffea512a6820b24f9a1a3 Mon Sep 17 00:00:00 2001
+From: Simon Busch <morphis@gravedo.de>
+Date: Mon, 2 Jan 2012 17:30:46 +0100
+Subject: [PATCH 2/2] Evaluate QMAKE_BIN variable from commandline environment
+
+Signed-off-by: Simon Busch <morphis@gravedo.de>
+---
+ configure |    4 +++-
+ 1 files changed, 3 insertions(+), 1 deletions(-)
+
+diff --git a/configure b/configure
+index 928747d..4e8b1a6 100755
+--- a/configure
++++ b/configure
+@@ -868,7 +868,9 @@ done
+ #    [ -f "$mkfile" ] && chmod +w "$mkfile"
+ #fi
+ 
+-if [ -z "$QTDIR" ]; then
++if [ ! -z "$QMAKE_BIN" ]; then
++    echo "Using ${QMAKE_BIN} as qmake"
++elif [ -z "$QTDIR" ]; then
+     which qmake > /dev/null
+     if [ $? -eq 0 ]; then
+         QMAKE_BIN=`which qmake`
+-- 
+1.7.7.3
+

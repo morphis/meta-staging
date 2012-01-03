@@ -1,0 +1,43 @@
+From 70c6bd74f7cfcfe8cdc4b1ac58bfd56e46ed2e9a Mon Sep 17 00:00:00 2001
+From: Simon Busch <morphis@gravedo.de>
+Date: Tue, 3 Jan 2012 14:26:44 +0100
+Subject: [PATCH] mthemedaemon: include necessary source files for compilation
+
+Signed-off-by: Simon Busch <morphis@gravedo.de>
+---
+ mthemedaemon/mthemedaemon.pro |    4 ----
+ 1 files changed, 0 insertions(+), 4 deletions(-)
+
+diff --git a/mthemedaemon/mthemedaemon.pro b/mthemedaemon/mthemedaemon.pro
+index 6a7978d..0b0bb63 100644
+--- a/mthemedaemon/mthemedaemon.pro
++++ b/mthemedaemon/mthemedaemon.pro
+@@ -45,12 +45,10 @@ SOURCES += main.cpp \
+            ../src/corelib/core/mgraphicssystemhelper.cpp \
+            ../src/corelib/core/msystemdirectories.cpp
+ 
+-linux-g++-maemo {
+     SOURCES += ../src/corelib/theme/inotifywrapper/inotify.cpp \
+                ../src/corelib/theme/inotifywrapper/inotify.watch.cpp \
+                ../src/corelib/theme/inotifywrapper/fstreenode.cpp \
+                ../src/corelib/theme/inotifywrapper/utils.cpp
+-}
+ 
+ contains(DEFINES, HAVE_GCONF) {
+     PKGCONFIG += gconf-2.0
+@@ -74,12 +72,10 @@ HEADERS += \
+            ../src/corelib/core/msystemdirectories.h \
+            keypresswaiter.h
+ 
+-linux-g++-maemo {
+     HEADERS += ../src/corelib/theme/inotifywrapper/inotify.h \
+                ../src/corelib/theme/inotifywrapper/inotify.watch.h \
+                ../src/corelib/theme/inotifywrapper/fstreenode.h \
+                ../src/corelib/theme/inotifywrapper/utils.h
+-}
+ 
+ QMAKE_EXTRA_TARGETS += check
+ check.depends = $$TARGET
+-- 
+1.7.7.3
+
