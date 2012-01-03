@@ -1,0 +1,122 @@
+From 74970efdf4eede4f723f41a863b25e41facc3fc0 Mon Sep 17 00:00:00 2001
+From: Simon Busch <morphis@gravedo.de>
+Date: Tue, 3 Jan 2012 17:14:20 +0100
+Subject: [PATCH] Don't use mthemedaemon but just local filesystem access
+
+Signed-off-by: Simon Busch <morphis@gravedo.de>
+---
+ src/meego/mdeclarativeimageprovider.cpp |   62 ++++++++++++++++++------------
+ src/meego/mdeclarativeimageprovider.h   |    5 --
+ 2 files changed, 37 insertions(+), 30 deletions(-)
+
+diff --git a/src/meego/mdeclarativeimageprovider.cpp b/src/meego/mdeclarativeimageprovider.cpp
+index 3e7f940..556248b 100644
+--- a/src/meego/mdeclarativeimageprovider.cpp
++++ b/src/meego/mdeclarativeimageprovider.cpp
+@@ -40,44 +40,56 @@
+ 
+ #include "mdeclarativeimageprovider.h"
+ 
+-#include <themedaemon/mlocalthemedaemonclient.h>
+-#include <themedaemon/mremotethemedaemonclient.h>
+-
+ #include <qglobal.h>
++#include <QFile>
++#include <QDebug>
++#include <QImageReader>
+ 
+ MDeclarativeImageProvider::MDeclarativeImageProvider() :
+-    QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap),
+-    m_themeDaemonClient(0)
++    QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap)
+ {
+-    bool useRemoteThemeDaemon = qgetenv("M_FORCE_LOCAL_THEME").isEmpty();
+-#if defined Q_WS_MAC || defined Q_WS_WIN32 || defined FORCE_LOCAL_THEME
+-    useRemoteThemeDaemon = false;
+-#endif
+-
+-    MRemoteThemeDaemonClient *remoteThemeDaemonClient = 0;
+-    if (useRemoteThemeDaemon)
+-        remoteThemeDaemonClient = new MRemoteThemeDaemonClient();
+-
+-    if (remoteThemeDaemonClient && remoteThemeDaemonClient->isConnected()) {
+-        m_themeDaemonClient = remoteThemeDaemonClient;
+-    } else {
+-        if (remoteThemeDaemonClient)
+-            delete remoteThemeDaemonClient;
+-        m_themeDaemonClient = new MLocalThemeDaemonClient();
+-    }
+ }
+ 
+ MDeclarativeImageProvider::~MDeclarativeImageProvider()
+ {
+-    delete m_themeDaemonClient;
+ }
+ 
+ QPixmap MDeclarativeImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
+ {
+-    const QPixmap pixmap = m_themeDaemonClient->requestPixmap(id, requestedSize);
+-    if (!pixmap.isNull() && size) {
+-        *size = pixmap.size();
++    QPixmap pixmap;
++    QString themeImageDir = QString("%1/meego-base/images/").arg(THEME_DIR);
++    QString themeIconDir = QString("%1/meego-base/icons/").arg(THEME_DIR);
++
++    QString themeFile = themeImageDir + id + ".png";
++    if (id.startsWith("icon"))
++        themeFile = themeIconDir + id + ".png";
++
++    if (QFile::exists(themeFile))
++    {
++        QImageReader imageReader(themeFile);
++        if (requestedSize.isValid())
++            imageReader.setScaledSize(requestedSize);
++        pixmap = QPixmap::fromImageReader(&imageReader);
+     }
++    else
++    {
++        qDebug() << "WARNING: Can't find " << id << " as " << themeFile;
++        // Return a red pixmap to assist in finding missing images
++        int width = requestedSize.width();
++        int height = requestedSize.height();
++
++        if (width <= 0)
++            width = 100;
++        if (height <= 0)
++            height = 100;
++
++        pixmap = QPixmap(QSize(width, height));
++        pixmap.fill(Qt::red);
++    }
++
++    if (size)
++        *size = pixmap.size();
+ 
+     return pixmap;
++
+ }
+diff --git a/src/meego/mdeclarativeimageprovider.h b/src/meego/mdeclarativeimageprovider.h
+index eb5eb0d..7b5568b 100644
+--- a/src/meego/mdeclarativeimageprovider.h
++++ b/src/meego/mdeclarativeimageprovider.h
+@@ -43,17 +43,12 @@
+ 
+ #include <qdeclarativeimageprovider.h>
+ 
+-class MAbstractThemeDaemonClient;
+-
+ class MDeclarativeImageProvider : public QDeclarativeImageProvider
+ {
+ public:
+     MDeclarativeImageProvider();
+     virtual ~MDeclarativeImageProvider();
+     virtual QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
+-
+-private:
+-    MAbstractThemeDaemonClient *m_themeDaemonClient;
+ };
+ 
+ #endif
+-- 
+1.7.7.3
+

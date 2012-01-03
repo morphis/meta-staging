@@ -3,7 +3,7 @@ AUTHOR = "Nokia Corporation and/or its subsidiary(-ies)"
 HOMEPAGE = "http://qt.nokia.com/"
 SECTION = "qt4"
 
-DEPENDS = "qt-components-graphics"
+RDEPENDS = "qt-components-graphics"
 
 LICENSE = "BSD & GFDL-1.3"
 LIC_FILES_CHKSUM = " \
@@ -16,7 +16,8 @@ PR = "r0"
 SRC_URI = " \
   git://gitorious.org/qt-components/qt-components.git;protocol=git;branch=master \
   file://configure-qmake-exec.patch \
-  file://compilation-mlocalewrapper.patch"
+  file://compilation-mlocalewrapper.patch \
+  file://disable-mthemedaemon-support.patch"
 S = "${WORKDIR}/git"
 SRCREV = "3ebb2b652a444790d32d4fecd02ae3267a8ec8b0"
 
@@ -45,4 +46,3 @@ FILES_${PN}-dbg += " \
   ${libdir}/${QT_COMPONENTS_DIR}/imports/com/meego/extras/.debug"
 FILES_${PN}-dev += "${libdir}/${QT_COMPONENTS_DIR}/mkspecs"
 FILES_${PN} += "${libdir}/${QT_COMPONENTS_DIR}/imports"
-
