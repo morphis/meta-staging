@@ -13,10 +13,13 @@ SRC_URI = "git://gitorious.org/fremantle-qt-components/qt-components-graphics.gi
 S = "${WORKDIR}/git"
 SRCREV = "3e69c6969a4c87b0394c6a3497d09a6d9abe7eab"
 
+TO_INSTALL = "images icons"
 do_install() {
-  mkdir -p ${D}/${datadir}/themes
-  cp -r ${S}/base ${D}/${datadir}/themes
+  mkdir -p ${D}/${datadir}/themes/meego-base/{images,icons}
+  for i in ${TO_INSTALL}; do
+    find ${S}/base/meegotouch/$i -name *.png -print0 | xargs -0 -r cp -v -p --target-directory=${D}/${datadir}/themes/meego-base/$i
+  done
 }
 
 PACKAGES = "${PN}"
-FILES_${PN} = "${datadir}/themes"
+FILES_${PN} = "${datadir}/themes/meego-base"
