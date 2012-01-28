@@ -3,13 +3,13 @@ AUTHOR = "Nokia Corporation and/or its subsidiary(-ies)"
 HOMEPAGE = "http://qt.nokia.com/"
 SECTION = "meego/ui"
 
-DEPENDS = "icu gconf libmeegotouch-native"
+DEPENDS = "icu gconf meegotouch-theme"
 
 LICENSE = "LGPL-2.1"
 LIC_FILES_CHKSUM = "file://LICENSE.LGPL;md5=7635eef25dff78f483059bf21a20686d"
 
 PV = "0.25.3-1+gitr${SRCPV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = " \
   git://gitorious.org/meegotouch/libmeegotouch.git;protocol=git;branch=master \
