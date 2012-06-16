@@ -1,0 +1,31 @@
+From 0bf80ce6c6a6f129a2f69f2da389eaee7464a094 Mon Sep 17 00:00:00 2001
+From: Simon Busch <morphis@gravedo.de>
+Date: Tue, 3 Jan 2012 20:15:22 +0100
+Subject: [PATCH] meego: default to portrait mode whatever we're running on
+
+Signed-off-by: Simon Busch <morphis@gravedo.de>
+---
+ src/meego/mdeclarativescreen.cpp |    5 -----
+ 1 files changed, 0 insertions(+), 5 deletions(-)
+
+diff --git a/src/meego/mdeclarativescreen.cpp b/src/meego/mdeclarativescreen.cpp
+index 74cf341..f354f16 100644
+--- a/src/meego/mdeclarativescreen.cpp
++++ b/src/meego/mdeclarativescreen.cpp
+@@ -188,13 +188,8 @@ bool x11EventFilter(void *message, long *result)
+ 
+ MDeclarativeScreenPrivate::MDeclarativeScreenPrivate(MDeclarativeScreen *qq)
+     : q(qq)
+-#ifdef __ARMEL__
+-    , orientation(MDeclarativeScreen::Landscape)
+-    , finalOrientation(MDeclarativeScreen::Landscape)
+-#else
+     , orientation(MDeclarativeScreen::Portrait)
+     , finalOrientation(MDeclarativeScreen::Portrait)
+-#endif
+     , allowedOrientations(MDeclarativeScreen::Landscape | MDeclarativeScreen::Portrait)
+     , rotationDirection(MDeclarativeScreen::NoDirection)
+     , isCovered(false)
+-- 
+1.7.7.3
+

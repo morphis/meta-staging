@@ -17,7 +17,8 @@ SRC_URI = " \
   git://gitorious.org/qt-components/qt-components.git;protocol=git;branch=master \
   file://configure-qmake-exec.patch \
   file://compilation-mlocalewrapper.patch \
-  file://disable-mthemedaemon-support.patch"
+  file://disable-mthemedaemon-support.patch \
+  file://default-to-portrait-mode.patch"
 S = "${WORKDIR}/git"
 SRCREV = "3ebb2b652a444790d32d4fecd02ae3267a8ec8b0"
 
